@@ -9,6 +9,8 @@ app = Flask(__name__)
 
 @app.route('/')
 def hello_world():  # put application's code here
+    remove_files_in_folder("uploads/")
+    # os.remove("uploads.zip")
     return render_template('index.html')
 
 
@@ -51,7 +53,7 @@ def remove_files_in_folder(folder_path):
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    remove_files_in_folder("uploads/")
+
     if 'file' not in request.files:
         return render_template('index.html', message='No file part')
 
