@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Image Processing UI</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}">
+</head>
+<body>
+
+<!-- Container for the entire application layout -->
+<div class="container">
+
+    <!-- Input Section -->
+    <div class="section image-input-section" id="input-section">
+        <h2 style="color: azure">Input</h2>
+        <div class="upload-container">
+            <!-- Upload Box for image upload -->
+            <div class="upload-box">
+                {#                <label for="image-upload" class="upload-label">Upload here</label>#}
+                {#                <input type="file" id="image-upload" style="display: none;" multiple/>#}
+                <input class="upload-label" type="file" id="image-upload" name="images[]" multiple accept="image/jpeg, image/jpg">
+
+                <div id="load" class="loader"></div>
+                <p id="result-txt"></p>
+
+
+                <img id="input-preview-image" style="display: none;">
+            </div>
+            <!-- Display the uploaded file name -->
+            <div id="file-name"></div>
+        </div>
+        <!-- Buttons below the upload box -->
+        <div class="input-buttons">
+            <button id="reset-btn">Reset</button>
+            {#            <button id="run-btn">Run</button>#}
+            <a id="input-buttons" href="/download">Download</a>
+        </div>
+    </div>
+
+
+</div>
+
+<script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
