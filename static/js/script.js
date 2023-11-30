@@ -14,7 +14,7 @@ document.getElementById('image-upload').addEventListener('change', function (eve
 
         for (const file of files) {
             const reader = new FileReader();
-            loader.style.display = 'block';
+            load.style.display = 'block';
             uploadLabel.style.display = 'none';
 
             reader.onload = function (e) {
@@ -53,7 +53,7 @@ function saveImageToServer(file) {
     xhr.onload = function () {
         if (xhr.status === 200) {
             console.log('File uploaded successfully');
-            loader.style.display = 'none';
+            load.style.display = 'none';
             result.innerHTML="YOU CAN NOW DOWNLOAD THE DENOISED FILES";
             result.style.color='white';
             const response = JSON.parse(xhr.responseText);
@@ -72,17 +72,17 @@ function saveImageToServer(file) {
 }
 
 // Event listener for the download button
-document.getElementById('download-btn').addEventListener('click', function () {
-    const outputImage = document.getElementById('output-preview-image');
-    if (outputImage.src) {
-        const link = document.createElement('a');
-        link.href = outputImage.src;
-        link.download = 'processed-image.png';
-        link.click();
-    } else {
-        alert("No image to download.");
-    }
-});
+// document.getElementById('download-btn').addEventListener('click', function () {
+//     const outputImage = document.getElementById('output-preview-image');
+//     if (outputImage.src) {
+//         const link = document.createElement('a');
+//         link.href = outputImage.src;
+//         link.download = 'processed-image.png';
+//         link.click();
+//     } else {
+//         alert("No image to download.");
+//     }
+// });
 
 // Reset button functionality
 document.getElementById('reset-btn').addEventListener('click', function () {

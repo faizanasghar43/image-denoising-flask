@@ -17,7 +17,8 @@ def denoiser(file_path):
 
     input_img = mpimg.imread(file_path)
 
-    output_img = cv2.fastNlMeansDenoisingColored(input_img, None, 10, 10, 7, 21)
+    # output_img = cv2.fastNlMeansDenoisingColored(input_img, None, 10, 10, 7, 21)
+    output_img = cv2.fastNlMeansDenoisingColored(input_img, None, 15, 15, 7, 21)
 
     output_file_name = file_name + "_denoised"
     output_file_full_name = output_file_name + '.' + file_extension
