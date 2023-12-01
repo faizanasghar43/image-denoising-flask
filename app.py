@@ -8,27 +8,12 @@ import requests
 from PIL import Image
 import io
 
-
-def get_image_data(image_path):
-    # Open the image file
-    with Image.open(image_path) as img:
-        # Convert the image to RGB format (if not already in this format)
-        img = img.convert('RGB')
-        # Create a byte buffer
-        img_byte_arr = io.BytesIO()
-        # Save image to the byte buffer
-        img.save(img_byte_arr, format='PNG')
-        # Get the byte data
-        img_byte_arr = img_byte_arr.getvalue()
-        return img_byte_arr
-
-
 app = Flask(__name__)
 
 
 @app.route('/')
 def hello_world():  # put application's code here
-    # if remove_files_in_folder("uploads/").exist():
+    remove_files_in_folder("uploads/")
     #
     #     # os.remove("uploads.zip")
     return render_template('index.html')
@@ -78,7 +63,7 @@ def download_file(url, filename):
     # Check if the request was successful
     if response.status_code == 200:
         # Open a file in binary write mode
-        with open("uploads/" + filename+"_processed", 'wb') as file:
+        with open("uploads/" + "processed_" + filename, 'wb') as file:
             # Write the content of the response to the file
             for chunk in response.iter_content(chunk_size=128):
                 file.write(chunk)
@@ -101,11 +86,8 @@ def upload():
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
 
         file.save(filename)
-        # donoised=(denoiser(filename))
 
-        # Call the denoiser function on the saved file
-        image_to_send =open(f"{filename}", "rb")
-
+        image_to_send = open(f"{filename}", "rb")
 
         output = replicate.run(
             "cszn/scunet:df9a3c1dbc6c1f7f4c2d244f68dffa2699a169cf5e701e0d6a009bf6ff507f26",
@@ -123,7 +105,6 @@ def upload():
                 "task_type": "Image Debluring (REDS)"
             }
         )
-
 
         output = replicate.run(
             "microsoft/bringing-old-photos-back-to-life:c75db81db6cbd809d93cc3b7e7a088a351a3349c9fa02b6d393e35e0d51ba799",
