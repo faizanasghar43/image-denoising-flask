@@ -29,3 +29,4 @@ def denoiser(file_path):
     plt_file_path = plt_file_full_name if slash_index == -1 else file_extra_path + '/' + plt_file_full_name
 
     mpimg.imsave(output_file_path, output_img)
+    return output_file_path
