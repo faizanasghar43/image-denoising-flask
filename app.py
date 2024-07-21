@@ -1,70 +1,105 @@
 import os
 from zipfile import ZipFile
-
-import replicate
-from flask import Flask, render_template, request, jsonify, send_file
+import cv2
 import requests
-
-from PIL import Image
-import io
+from flask import Flask, render_template, request, jsonify, send_file
 
 app = Flask(__name__)
 
+UPLOAD_FOLDER = 'uploads'
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+
+# Ensure the uploads directory exists
+if not os.path.exists(UPLOAD_FOLDER):
+    os.makedirs(UPLOAD_FOLDER)
+
+
+def apply_hdr(input_img):
+    # Enhance local contrast and details
+    detail_enhanced = cv2.detailEnhance(input_img, sigma_s=10, sigma_r=0.15)
+
+    # Convert to LAB color space to adjust the brightness and contrast
+    lab = cv2.cvtColor(detail_enhanced, cv2.COLOR_BGR2LAB)
+
+    # Split LAB channels
+    l, a, b = cv2.split(lab)
+
+    # Apply CLAHE to the L-channel
+    clahe = cv2.createCLAHE(clipLimit=3.0, tileGridSize=(8, 8))
+    cl = clahe.apply(l)
+
+    # Merge CLAHE enhanced L-channel with A and B channels
+    limg = cv2.merge((cl, a, b))
+
+    # Convert back to BGR color space
+    hdr_like = cv2.cvtColor(limg, cv2.COLOR_LAB2BGR)
+
+    return hdr_like
+
+
+def denoiser(file_path):
+    slash_index = file_path.rfind('/')
+
+    if slash_index == -1:
+        file_full_name = file_path
+    else:
+        file_extra_path = file_path[:slash_index]
+        file_full_name = file_path[slash_index + 1:]
+
+    dot_index = file_full_name.rfind('.')
+    file_name = file_full_name[:dot_index]
+    file_extension = file_full_name[dot_index + 1:]
+
+    input_img = cv2.imread(file_path)
+
+    # Denoising the image
+    denoised_img = cv2.fastNlMeansDenoisingColored(input_img, None, 15, 15, 7, 21)
+
+    # Applying HDR effect
+    hdr_img = apply_hdr(denoised_img)
+
+    output_file_name = file_name + "_hdr"
+    output_file_full_name = output_file_name + '.' + file_extension
+    output_file_path = output_file_full_name if slash_index == -1 else file_extra_path + '/' + output_file_full_name
+
+    cv2.imwrite(output_file_path, hdr_img)
+    return output_file_path
+
 
 @app.route('/')
-def hello_world():  # put application's code here
-    remove_files_in_folder("uploads/")
-    #
-    #     # os.remove("uploads.zip")
+def hello_world():
+    remove_files_in_folder(UPLOAD_FOLDER)
     return render_template('index.html')
-
-
-UPLOAD_FOLDER = app.config['UPLOAD_FOLDER'] = "uploads"
 
 
 @app.route('/download', methods=['GET'])
 def download():
-    # Get a list of all files in the 'uploads' folder
     files_to_zip = [os.path.join(UPLOAD_FOLDER, filename) for filename in os.listdir(UPLOAD_FOLDER) if
                     os.path.isfile(os.path.join(UPLOAD_FOLDER, filename))]
 
-    # Create a zip file in memory
-    zip_buffer = ZipFile('uploads.zip', 'w')
-    for file_path in files_to_zip:
-        # Add each file to the zip file with its original filename
-        zip_buffer.write(file_path, os.path.basename(file_path))
+    with ZipFile('uploads.zip', 'w') as zip_buffer:
+        for file_path in files_to_zip:
+            zip_buffer.write(file_path, os.path.basename(file_path))
 
-    # Close the zip file
-    zip_buffer.close()
-
-    # Send the zip file as a response
     return send_file('uploads.zip', as_attachment=True)
 
 
 def remove_files_in_folder(folder_path):
     try:
-        # Get the list of files in the folder
         file_list = os.listdir(folder_path)
-
-        # Iterate through the files and remove each one
         for file_name in file_list:
             file_path = os.path.join(folder_path, file_name)
             os.remove(file_path)
-
-        return True, None  # Success
+        return True, None
     except Exception as e:
-        return False, str(e)  # Error message
+        return False, str(e)
 
 
 def download_file(url, filename):
-    # Send a GET request to the URL
     response = requests.get(url, stream=True)
-
-    # Check if the request was successful
     if response.status_code == 200:
-        # Open a file in binary write mode
-        with open("uploads/" + "processed_" + filename, 'wb') as file:
-            # Write the content of the response to the file
+        with open(os.path.join(UPLOAD_FOLDER, "processed_" + filename), 'wb') as file:
             for chunk in response.iter_content(chunk_size=128):
                 file.write(chunk)
         print("Download completed.")
@@ -84,43 +119,13 @@ def upload():
 
     if file:
         filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-
         file.save(filename)
 
-        image_to_send = open(f"{filename}", "rb")
-
-        output = replicate.run(
-            "cszn/scunet:df9a3c1dbc6c1f7f4c2d244f68dffa2699a169cf5e701e0d6a009bf6ff507f26",
-
-            input={
-                "image": image_to_send,
-                "model_name": "real image denoising"
-            }
-        )
-
-        output_deblur = replicate.run(
-            "megvii-research/nafnet:018241a6c880319404eaa2714b764313e27e11f950a7ff0a7b5b37b27b74dcf7",
-            input={
-                "image": f"{output['denoised_image']}",
-                "task_type": "Image Debluring (REDS)"
-            }
-        )
-
-        output = replicate.run(
-            "microsoft/bringing-old-photos-back-to-life:c75db81db6cbd809d93cc3b7e7a088a351a3349c9fa02b6d393e35e0d51ba799",
-            input={
-                "HR": True,
-                "image": f"{output_deblur}",
-                "with_scratch": True
-            }
-        )
-
+        output_file_path = denoiser(filename)
         os.remove(filename)
-        download_file(output, file.filename)
 
-        # Return a JSON response with the denoised image URL
         return jsonify({'message': 'File uploaded and processed successfully',
-                        'denoised_image_url': '/denoised/' + file.filename})
+                        'denoised_image_url': '/denoised/' + os.path.basename(output_file_path)})
 
 
 if __name__ == '__main__':
