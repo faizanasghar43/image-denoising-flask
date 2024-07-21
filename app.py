@@ -1,5 +1,6 @@
 import os
 from zipfile import ZipFile
+
 import cv2
 import requests
 from flask import Flask, render_template, request, jsonify, send_file
@@ -129,4 +130,5 @@ def upload():
 
 
 if __name__ == '__main__':
-    app.run()
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
