@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- <link rel="stylesheet" href="app.css" /> -->
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles2.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>DenoiseIt | Home</title>
+  </head>
+  <body>
+    <nav>
+      <div>
+        <!-- <img src="/static/logo.png" alt="ClockWise Logo" class="logo" /> -->
+        <a href="#">
+          <p style="color: white; font-size: 16px; font-weight: 500">
+            DenoiseIt
+          </p>
+          <!-- <img src="logo.png" alt="Logo" /> -->
+        </a>
+      </div>
+      <div>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+      </div>
+    </nav>
+
+    <section class="main">
+      <h1 style="text-align: center; margin: 20px auto">IMAGE DENOISER APP</h1>
+      <div class="image-container" id="image-container">
+        <input
+          type="range"
+          name=""
+          id="range-selector"
+          min="0"
+          max="100"
+          value="50"
+          tabindex="-1"
+          style="display: none"
+        />
+        <div
+          class="image-before"
+          id="image-before"
+          style="background-image: url({{image_before}});"
+        ></div>
+        <div
+          class="image-after"
+          id="image-after"
+          style="background-image: url({{image_after}});"
+        ></div>
+      </div>
+
+      <div class="btn-wrapper">
+        <button
+          class="upload-btn-custom"
+          style="flex-grow: 1"
+          id="upload-btn"
+          style="margin: 0 auto"
+        >
+          Choose File
+          <input
+            class="upload-label"
+            type="file"
+            id="image-upload"
+            name="images[]"
+            multiple
+            accept="image/jpeg, image/png, image/jpg"
+          />
+        </button>
+        <button class="upload-btn-custom" style="display: none" id="reset-btn">
+          Reset
+        </button>
+        <button
+          class="upload-btn-custom"
+          style="display: none"
+          id="download-btn"
+        >
+          Download
+        </button>
+      </div>
+
+      <!-- Add image:
+        <input
+          type="file"
+          accept="image/*"
+          name=""
+          id="before-selector"
+          onchange="updateImage()"
+        /> -->
+      <br />
+      <!-- Add "after" image:
+        <input
+          type="file"
+          accept="image/*"
+          name=""
+          id="after-selector"
+          onchange="updateImage()"
+        /> -->
+
+      <div class="raw-image" id="raw-image"></div>
+      <div
+        class="load-wrapper"
+        style="
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+        "
+      >
+        <div id="load" class="loader"></div>
+        <p id="result-txt" style="display: none">Processing...</p>
+        <p id="error-text" class="error-text"></p>
+      </div>
+
+      <!-- <div class="image-container">
+        <input
+          type="range"
+          name=""
+          id=""
+          min="0"
+          max="100"
+          value="50"
+          tabindex="-1"
+        />
+        <div
+          class="image-before"
+          id="image-before"
+          style="background-image: url({{image_before}});"
+        ></div>
+        <div
+          class="image-after"
+          id="image-after"
+          style="background-image: url({{image_after}});"
+        ></div>
+      </div> -->
+    </section>
+
+    <script src="{{ url_for('static', filename='js/script2.js') }}"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+  </body>
+</html>

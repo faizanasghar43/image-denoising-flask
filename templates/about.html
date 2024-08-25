@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/styles2.css') }}"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+    <title>About DenoiseIt</title>
+  </head>
+  <body>
+    <nav>
+      <div>
+        <!-- <img src="/static/logo.png" alt="ClockWise Logo" class="logo" /> -->
+        <a href="#">
+          <p style="color: white; font-size: 16px; font-weight: 500">
+            DenoiseIt
+          </p>
+          <!-- <img src="logo.png" alt="Logo" /> -->
+        </a>
+      </div>
+      <div>
+        <a href="/">Home</a>
+        <a href="/about">About</a>
+      </div>
+    </nav>
+    <div class="container">
+      <h1 class="red-color">About DnoiseIt</h1>
+      <h2 class="red-color" style="margin-bottom: 10px">Artist: Paven</h2>
+      <p>
+        DenoiseIt is a “smart” image denoiser. Utilizing a combination of
+        artificial intelligence and python, the software can denoise image up to
+        fullest.
+      </p>
+      <h2 class="red-color" style="margin-top: 20px">System</h2>
+      <p>
+        The project operates through software that links to a camera for face
+        detection. Upon recognizing a viewer, ClockWise displays the time of
+        their last visit. For repeat viewers, it shows the last time they
+        checked, creating a unique interaction that plays on human memory and
+        the concept of time perception. New faces trigger the clock to record
+        the current time, storing this data to display upon their return. This
+        inventive approach reimagines the traditional clock, making each glance
+        a personal and reflective experience.
+      </p>
+      <p>
+        For more information, visit
+        <a href="http://www.coin-operated.com" target="_blank"
+          >www.coin-operated.com</a
+        >.
+      </p>
+    </div>
+  </body>
+</html>
