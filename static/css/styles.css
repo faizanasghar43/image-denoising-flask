@@ -1,10 +1,9 @@
-
 body {
   font-family: Arial, sans-serif; /* Setting the default font to Arial */
   margin: 0; /* Removing default margin */
   padding: 0; /* Removing default padding */
   overflow: hidden; /* Hiding any overflow */
-  background-image: url('../images/pic1.avif'); /* Background image for the entire page */
+  background-image: url("../images/pic1.avif"); /* Background image for the entire page */
   background-size: cover; /* Ensuring the background image covers the entire area */
   background-position: center; /* Centering the background image */
   background-repeat: no-repeat; /* Preventing the background image from repeating */
@@ -14,22 +13,28 @@ body {
 .container {
   display: flex; /* Using flexbox for layout */
   margin: 20px; /* Margin around the container */
-  height: calc(100vh - 40px); /* Calculating height based on viewport height minus margin */
+  height: calc(
+    100vh - 40px
+  ); /* Calculating height based on viewport height minus margin */
   overflow: hidden; /* Hiding overflow */
 }
-#load{
-  display: none;
+#load {
+  /* display: none; */
   border: 16px solid #f3f3f3; /* Light grey */
   border-top: 16px solid #3498db; /* Blue */
   border-radius: 50%;
-  width: 120px;
-  height: 120px;
+  width: 50px;
+  height: 50px;
   animation: spin 2s linear infinite;
 }
 
 @keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 /* Styling for input and output sections */
@@ -119,6 +124,9 @@ body {
   color: white; /* White text color */
   font-weight: 800; /* Bold font weight */
   font-size: 1.2em; /* Slightly larger font size */
+  position: absolute;
+  width: 100%;
+  left: 0;
 }
 
 /* Styles for displaying the file name */
@@ -141,7 +149,8 @@ body {
 }
 
 /* Individual button styles in the input section */
-.input-buttons button, a {
+.input-buttons button,
+a {
   flex: 1; /* Each button takes equal space */
   margin: 0 5px; /* Margin between buttons */
   background-color: black; /* Black background color */
@@ -152,7 +161,8 @@ body {
 }
 
 /* Styles for image preview in both input and output sections */
-#input-preview-image, #output-preview-image {
+#input-preview-image,
+#output-preview-image {
   max-width: 100%; /* Maximum width */
   max-height: 100%; /* Maximum height */
   object-fit: contain; /* Fit the object without distortion */
@@ -191,6 +201,48 @@ button {
   margin: 0 5px; /* Margin around buttons */
 }
 
-
-
 /* Rest of your CSS remains unchanged */
+
+body,
+html {
+  background-color: #121212;
+  color: #ffffff;
+}
+
+nav {
+  background-color: #333;
+  color: white;
+}
+
+.container {
+  background-color: #121212 !important;
+  box-shadow: 0 2px 4px rgba(255, 255, 255, 0.1);
+}
+
+nav {
+  width: 100%;
+  /*   background-color: #333;
+  color: white; */
+  padding: 1rem 0;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: flex-end;
+  padding-right: 20px;
+}
+
+nav a {
+  color: white;
+  text-decoration: none;
+  margin: 0 15px;
+  font-size: 18px;
+}
+
+.container {
+  margin: 20px auto;
+  max-width: 800px;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  /*   background-color: #FFFFFF; */
+  transition: background-color 0.3s, box-shadow 0.3s;
+}
